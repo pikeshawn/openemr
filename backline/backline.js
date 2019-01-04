@@ -99,8 +99,8 @@
         console.log(rootUrl);
         console.log(_lastPatientPid);
         rootUrl = 'https://openemr.staging.drfirst.com';
-        //jQuery.get(rootUrl + '/backline/backline_injector.php?patient_id=' + _lastPatientPid, function (data) {
-        jQuery.get('https://openemr.staging.drfirst.com/backline/backline_injector.php?patient_id=1', function (data) {
+        jQuery.get(rootUrl + '/backline/backline_injector.php?patient_id=' + _lastPatientPid, function (data) {
+        //jQuery.get('https://openemr.staging.drfirst.com/backline/backline_injector.php?patient_id=1', function (data) {
             console.log(JSON.stringify(data));
             _backlinePatientData = data;
             sendMessageLink.removeClass('loading');
@@ -318,7 +318,7 @@
 
                 clearInterval(_patientQueryIntervalHandle);
 		var rootUrl = 'https://openemr.staging.drfirst.com';
-                _patientQueryIntervalHandle = setInterval(updateBacklinePatientButton, 5000);
+                _patientQueryIntervalHandle = setInterval(updateBacklinePatientButton(true, _lastPatientPid, rootUrl), 5000);
                 updateBacklinePatientButton(true, _lastPatientPid, rootUrl);
 
                 return retVal;
