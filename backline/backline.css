@@ -1,0 +1,110 @@
+.backline-chat-link-button .send-message-text {
+    text-transform: uppercase;
+}
+
+.backline-chat-link-button.loading {
+    cursor: default;
+    background-color: grey;
+    color: lightgray;
+}
+
+.backline-chat-link-button.has-messages .send-message-text {
+    display:inline-block;
+    padding-left: 15px;
+}
+
+.badge {
+    border-radius:5px;
+    padding:0 5px;
+    font-size:10px;
+    font-weight:bold;
+    text-decoration: none !important;
+}
+
+.backline-sidebar-link .badge {
+    float: right;
+    display: none;
+    background-color:orange;
+    color: white;
+    padding-left: 5px !important;
+}
+
+.has-messages .badge {
+    display: inline-block;
+}
+
+.backline-chat-link-button .send-message-badge {
+    display: none;
+    position:absolute;
+    background-color:orange;
+    left:4px;
+    top:4px;
+
+}
+.backline-chat-link-button.has-messages .send-message-badge {
+    display: inline-block;
+}
+
+
+.backline-top-header {
+    text-decoration: none;
+}
+
+.backline-top-header small {
+    color: lightgray;
+}
+
+.backline-top-header>div{
+    padding: 10px 5px;
+    background-color: #96928b;
+    color: white;
+    text-decoration: none;
+    font-family: "ubunturegular","Arial", sans-serif;
+}
+
+.backline-top-header>div:hover{
+    background-color: #42403d;
+}
+
+.backline-top-header .badge {
+    background-color: orange;
+    font-size:18px;
+    color: white;
+}
+
+
+
+
+
+.backline-patient-portal-chat-link {
+    background-color: white;
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    width: 395px;
+    padding: 20px;
+    border-radius: 5px;
+    /*border: solid 2px #1f3f6d;*/
+    box-shadow: 0px 0px 17px 0.8px gray;
+    cursor: pointer;
+    text-align: center;
+}
+
+.backline-patient-portal-chat-link h1 {
+    margin: 0;
+    color: #0000cc;
+}
+
+
+.backline-chat-logo {
+    float:left;
+    margin-right: 5px;
+}
+
+.backline-error-button {
+    background-color: red;
+}
+
+.backline-error-button:hover {
+    background-color: #a10000;
+}

@@ -53,7 +53,7 @@ services:
     restart: always
     image: phpmyadmin/phpmyadmin
     ports:
-    - 8310:80
+    - 8310:81
     environment:
       PMA_HOSTS: mysql
 volumes:
