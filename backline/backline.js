@@ -147,7 +147,10 @@
                     sendPCCBadge.hide();
                 }
             }
-        });
+        }).fail(function(response) {
+	    console.log(JSON.stringify(response));
+	    console.log('Failed pulling back patient data');
+	});
     }
 
 
@@ -356,8 +359,17 @@
                 if (chatType === 'recent') {
                     location = _backlineData.recent_link.url;
                 } else if (chatType==='pcc') {
+
+		    if (_backlinePatientData.pcc_chat.url[4] === ':') {
+			var domain = _backlinePatientData.pcc_chat.url.substring(4);
+			_backlinePatientData.pcc_chat.url = 'https' + domain;
+		    }
                     location = _backlinePatientData.pcc_chat.url;
                 } else if (chatType==='user') {
+		    if (_backlinePatientData.user_chat.url[4] === ':') {
+			var domain = _backlinePatientData.user_chat.url.substring(4);
+			_backlinePatientData.user_chat.url = 'https' + domain;
+		    }
                     location = _backlinePatientData.user_chat.url;
                 }
                 top.frames[frame].location = location;

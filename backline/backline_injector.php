@@ -87,8 +87,8 @@ if (!empty($backlineUserId)) {
 
                 $query = http_build_query($queryData);
 
-                fwrite($f, $query."\n");
-                fclose($f);                
+                //fwrite($f, $query."\n");
+                //fclose($f);                
 
                 //Now use the user token to get the link to a public chat for a parrticular patient
                 $userChat = $cc->post('/partners/users/discussions', $query);
