@@ -164,7 +164,7 @@
             if (liEl.length > 0) {
                 if (!_backlineSidebarButtonEl) {
                     _backlineSidebarButtonEl = jQuery(
-                        '<li><a class="collapsed backline-sidebar-link" id="backlineLeftLink" onclick="return loadBacklineFrame(\'adm0\',\'RTop\',\'recent\')"><span>Backline <span class="badge"></span></span></a></li>'
+                        '<li><a class="collapsed backline-sidebar-link" id="backlineLeftLink" onclick="return loadBacklineFrame(\'adm0\',\'RTop\',\'recent\')"><i class="fa fa-fw fa-send fa-2x"><span>&nbsp;Backline</span></span></a></li>'
                     );
                     _backlineSidebarBadgeEl = _backlineSidebarButtonEl.find('.badge');
                     liEl.append(_backlineSidebarButtonEl);
@@ -357,7 +357,17 @@
 
                 var location;
                 if (chatType === 'recent') {
-                    location = _backlineData.recent_link.url;
+/*		           
+jQuery.get(_backlineData.recent_link.url, function(data){
+                               if (data.url[4] === ':') {
+                                   var domain = data.url.substring(4);
+                                   data.url = 'https' + domain;
+                               }
+                               location = data.url;
+                               finished = true;
+                           });*/
+                    location = 'https://webplus.demo.akariobl.com?auth_token=sRaX_HYyN_tfQQHee4ew#/recent';
+
                 } else if (chatType==='pcc') {
 
 		    if (_backlinePatientData.pcc_chat.url[4] === ':') {
