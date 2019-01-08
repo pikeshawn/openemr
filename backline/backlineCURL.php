@@ -39,7 +39,8 @@ class backlineCURL
         //Get the partner token
         $partnerData = $this->post('/partners/tokens/partner','email='.htmlspecialchars($backlinePartnerUsername, ENT_QUOTES, 'UTF-8').'&pw='.$backlinePartnerPassword.'&system_id='.$systemId);
 
-        return $partnerData['auth_token'];
+        return $partnerData;
+        //return $partnerData['auth_token'];
     }
 
     function getUserToken($partnerToken, $clientEmail){
@@ -54,7 +55,8 @@ class backlineCURL
 
 
         //Get the user token from the partner token
-        $userToken = $this->post('/partners/tokens/sudouser', 'auth_token='.$partnerToken.'&email='.htmlspecialchars($clientEmail, ENT_QUOTES, 'UTF-8').'&system_id='.$systemId.'&org_id='.$org->id);
+        $userToken = $this->post('/partners/tokens/sudouser', 'auth_token='.$partnerToken.'&email='.htmlspecialchars($clientEmail, ENT_QUOTES, 'UTF-8').'&system_id='.$systemId);
+        //$userToken = $this->post('/partners/tokens/sudouser', 'auth_token='.$partnerToken.'&email='.htmlspecialchars($clientEmail, ENT_QUOTES, 'UTF-8').'&system_id='.$systemId.'&org_id='.$org->id);
 
         if (isset($userToken['auth_token'])) {
             return $userToken['auth_token'];

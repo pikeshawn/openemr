@@ -43,10 +43,14 @@ $cc = new backlineCURL();
 
     $partnerAuthToken = $cc->getPartnerToken();
 
+echo $partnerAuthToken["auth_token"];
+echo "<br>";
+echo json_encode($partnerAuthToken);
+
     $userToken = $cc->getUserToken($partnerAuthToken, $partnerOrgEmail);
-    $orgs = $cc->get('/partners/clients'.'?auth_token='.$partnerAuthToken);
+    $orgs = $cc->get('/partners/clients'.'?auth_token='.$partnerAuthToken["auth_token"]);
 
-
+echo json_encode($orgs);
     //echo "<pre>".json_encode($cc->createClientOrg($partnerAuthToken))."</pre>";
 
 
@@ -166,12 +170,15 @@ function authorized_clicked() {
     <div>A backline client organization does not currently exist for your partner organization.  Please contact your OpenEMR vendor to create an organization for use with backline.</div>
     <pre>
 
-    <?php //echo json_encode($orgs); ?>
+    <?php echo json_encode($orgs); ?>
     </pre>
 <?php } else {
     $clientOrg = $orgs->client_orgs[0];
 
-    $users = $cc->get('/users'.'?auth_token='.$partnerAuthToken.'&org_id='.$clientOrg->id);
+    $users = $cc->get('/partners/clients/users'.'?auth_token='.$partnerAuthToken.'&org_id='.$clientOrg->id);
+//    $users = $cc->get('/partners/clients/users'.'?auth_token='.$partnerAuthToken.'&org_id=996);
+
+var_dump($users);
 ?>
 
 <table cellpadding="1" cellspacing="0" class="showborder">

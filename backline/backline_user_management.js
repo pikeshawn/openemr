@@ -13,7 +13,7 @@ var deleteBacklineUser;
 
         jQuery.get(rootUrl + '/backline/create_backline_user.php?id=' + userId, function (data) {
             var response = data;
-            //console.log(JSON.stringify(data));
+            console.log(JSON.stringify(data));
             if (response.error_code) {
                 alert('Could not create backline user: ' + response.error_code + ' - ' + response.error_text);
                 jQuery('#' + elementId).html('No <a onclick=\"createBacklineUser(\'' + userId + '\', \'' + elementId + '\')\" >[Create Backline Act.]</a>');

@@ -66,7 +66,8 @@ function submitform() {
        }
 
        f.submit();
-       parent.$.fn.fancybox.close();
+       alert('Email Has Been Updated');
+       //parent.$.fn.fancybox.close();
 }
 
 
