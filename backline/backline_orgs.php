@@ -193,12 +193,10 @@ function authorized_clicked() {
                 <tbody>
                     <tr>
                         <?php
-                         foreach ($partnerusers as $user) {
-                             echo "<tr>
-                                    <td>$user->id</td>
-                                    <td>$user->fname $user->lname</td>
-                                    <td>$user->email</td>
-                                  </tr>";
+                         foreach ($partnerusers->users as $user) {
+                             //echo "<tr><td>$user['id']</td><td>$user['fname'] $user['lname']</td><td>$user['email']</td></tr>";
+                             echo "<tr><td>".$user->id."</td><td>".$user->fname." ".$user->lname."</td><td>".$user->email."</td></tr>";
+//var_dump($user);
                          }
                         ?>
                     </tr>
@@ -220,11 +218,17 @@ function authorized_clicked() {
 
         <h1 class="text-center">Client Organizations</h1>
 
-        <?php foreach($clientOrgs["client_orgs"] as $org){ ?>
+        <?php foreach($clientOrgs->client_orgs as $org){ ?>
 
-            <h3><?php echo $org['name'] . " : " . $org['id']; ?></h3>
+            <h3><?php echo $org->name. " : " . $org->id; ?></h3>
 
-            <?php $clientusers = $cc->get('/partners/clients/users'.'?auth_token='.$partnerAuthToken.'&org_id='.$org["id"]); ?>
+            <?php $clientusers = $cc->get('/partners/clients/users'.'?auth_token='.$partnerAuthToken.'&org_id='.$org->id); ?>
+
+	<?php if(empty($clientusers->users)) {
+		echo "There are no Users for this organization";
+
+	} else {?>
+
 
             <table class="table">
                 <thead>
@@ -237,19 +241,21 @@ function authorized_clicked() {
                 <tbody>
                 <tr>
                     <?php
-                    foreach ($partnerusers as $user) {
-                        echo "<tr>
-                                    <td>$user->id</td>
-                                    <td>$user->fname $user->lname</td>
-                                    <td>$user->email</td>
-                                  </tr>";
-                    }
+                    foreach ($clientusers->users as $user) {
+                        //echo "<tr><td>$user['id']</td><td>$user['fname'] $user['lname']</td><td>$user['email']</td></tr>";
+                             //echo "<tr><td>a</td><td>b</td><td>c</td></tr>";
+                             echo "<tr><td>".$user->id."</td><td>".$user->fname." ".$user->lname."</td><td>".$user->email."</td></tr>";
+                     }
                     ?>
                 </tr>
                 </tbody>
             </table>
+                
+              <?php } ?>
 
-        <?php } ?>
+	<?php } ?>
+
+
 
 
 <!--        foreach() {-->
@@ -274,8 +280,8 @@ function authorized_clicked() {
 <!--        ?>-->
 
 
-
 <?php } ?>
+<hr>
 
 <table cellpadding="1" cellspacing="0" class="showborder">
 	<tbody><tr height="22" class="showborder_head">
@@ -305,7 +311,7 @@ function authorized_clicked() {
 
               if (isset($iter{"email"}) && strlen($iter{"email"}) > 1) {
                   $foundBacklineUser = false;
-                  foreach ($users->users as $backlineUser) {
+                  foreach ($partnerusers->users as $backlineUser) {
                       if($backlineUser->email == $iter{"email"}) {
                           $foundBacklineUser = true;
                       }
