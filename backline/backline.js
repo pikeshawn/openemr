@@ -403,13 +403,11 @@ jQuery.get(_backlineData.recent_link.url, function(data){
                 }
                 if (!f.cb_bot.checked) frame = 'RTop'; else if (!f.cb_top.checked) frame = 'RBot';
 
-
                 var location = '../../backline/backline_orgs.php';
                 top.frames[frame].location = location;
 
                 return false;
             };
-
 
             return true;
         } else {

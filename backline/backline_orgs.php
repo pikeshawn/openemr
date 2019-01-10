@@ -41,16 +41,18 @@ $cc = new backlineCURL();
 
 
 
-    $partnerAuthToken = $cc->getPartnerToken();
+    $partnerData = $cc->getPartnerToken();
+    $partnerAuthToken = $partnerData["auth_token"];
 
-echo $partnerAuthToken["auth_token"];
-echo "<br>";
-echo json_encode($partnerAuthToken);
+//echo $partnerAuthToken["auth_token"];
+//echo "<br>";
+//echo json_encode($partnerAuthToken);
 
     $userToken = $cc->getUserToken($partnerAuthToken, $partnerOrgEmail);
-    $orgs = $cc->get('/partners/clients'.'?auth_token='.$partnerAuthToken["auth_token"]);
+    $clientOrgs = $cc->get('/partners/clients'.'?auth_token='.$partnerAuthToken);
+    $parentOrgs = $partnerData["user"]["orgs"];
 
-echo json_encode($orgs);
+//echo json_encode($orgs);
     //echo "<pre>".json_encode($cc->createClientOrg($partnerAuthToken))."</pre>";
 
 
@@ -165,21 +167,115 @@ function authorized_clicked() {
 
 
 
-<?php  if (!$orgs || !isset($orgs->client_orgs) || count($orgs->client_orgs) == 0) { ?>
-
-    <div>A backline client organization does not currently exist for your partner organization.  Please contact your OpenEMR vendor to create an organization for use with backline.</div>
+<?php  if (empty($parentOrgs)) { ?>
+    <div>A backline parent organization does not currently exist for your partner organization.  Please contact your OpenEMR vendor to create an organization for use with backline.</div>
     <pre>
-
-    <?php echo json_encode($orgs); ?>
+    <?php echo json_encode($parentOrgs); ?>
     </pre>
-<?php } else {
-    $clientOrg = $orgs->client_orgs[0];
+<?php } else { ?>
 
-    $users = $cc->get('/partners/clients/users'.'?auth_token='.$partnerAuthToken.'&org_id='.$clientOrg->id);
-//    $users = $cc->get('/partners/clients/users'.'?auth_token='.$partnerAuthToken.'&org_id=996);
+    <h1 class="text-center">Parent Organizations</h1>
 
-var_dump($users);
-?>
+    <?php foreach($parentOrgs as $org){ ?>
+
+        <h3><?php echo $org['name'] . " : " . $org['id']; ?></h3>
+
+        <?php $partnerusers = $cc->get('/partners/clients/users'.'?auth_token='.$partnerAuthToken.'&org_id='.$org["id"]); ?>
+
+             <table class="table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <?php
+                         foreach ($partnerusers as $user) {
+                             echo "<tr>
+                                    <td>$user->id</td>
+                                    <td>$user->fname $user->lname</td>
+                                    <td>$user->email</td>
+                                  </tr>";
+                         }
+                        ?>
+                    </tr>
+                </tbody>
+            </table>
+
+    <?php } ?>
+
+
+    <?php  if (empty($clientOrgs)) { ?>
+
+        <div>A backline client organization does not currently exist for your partner organization.  Please contact your OpenEMR vendor to create an organization for use with backline.</div>
+        <pre>
+
+    <?php echo json_encode($clientOrgs); ?>
+    </pre>
+    <?php } else { ?>
+
+
+        <h1 class="text-center">Client Organizations</h1>
+
+        <?php foreach($clientOrgs["client_orgs"] as $org){ ?>
+
+            <h3><?php echo $org['name'] . " : " . $org['id']; ?></h3>
+
+            <?php $clientusers = $cc->get('/partners/clients/users'.'?auth_token='.$partnerAuthToken.'&org_id='.$org["id"]); ?>
+
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <?php
+                    foreach ($partnerusers as $user) {
+                        echo "<tr>
+                                    <td>$user->id</td>
+                                    <td>$user->fname $user->lname</td>
+                                    <td>$user->email</td>
+                                  </tr>";
+                    }
+                    ?>
+                </tr>
+                </tbody>
+            </table>
+
+        <?php } ?>
+
+
+<!--        foreach() {-->
+<!---->
+<!--        }-->
+<!---->
+<!--        $clientOrg = $orgs->client_orgs[0];-->
+<!---->
+<!--        $allPartnerOrgs = [];-->
+<!---->
+<!--        $allUserOrgs = [];-->
+<!---->
+<!--        foreach () {-->
+<!---->
+<!--        }-->
+<!---->
+<!--        $users = $cc->get('/partners/clients/users'.'?auth_token='.$partnerAuthToken.'&org_id='.$clientOrg->id);-->
+<!--        $users = $cc->get('/partners/clients/users'.'?auth_token='.$partnerAuthToken.'&org_id='.$clientOrg->id);-->
+<!--//    $users = $cc->get('/partners/clients/users'.'?auth_token='.$partnerAuthToken.'&org_id=996);-->
+<!---->
+<!--// var_dump($users);-->
+<!--        ?>-->
+
+
+
+<?php } ?>
 
 <table cellpadding="1" cellspacing="0" class="showborder">
 	<tbody><tr height="22" class="showborder_head">
@@ -189,31 +285,32 @@ var_dump($users);
 		<th width="320px"><b><?php xl('Backline Account','e'); ?>?</b></th>
 
 		<?php
-$query = "SELECT * FROM users WHERE username != '' ";
-if (!$form_inactive) $query .= "AND active = '1' ";
-$query .= "ORDER BY username";
-$res = sqlStatement($query);
-for ($iter = 0;$row = sqlFetchArray($res);$iter++)
-  $result4[$iter] = $row;
-foreach ($result4 as $iter) {
-  if ($iter{"authorized"}) {
-    $iter{"authorized"} = xl('yes');
-  } else {
-      $iter{"authorized"} = "";
-  }
-
-  print "<tr height=20  class='text' style='border-bottom: 1px dashed;'>
-		<td class='text'><b><span>" . $iter{"username"} . "</span></b>" ."&nbsp;</td>
-	<td><span class='text'>" . attr($iter{"fname"}) . ' ' . attr($iter{"lname"}) ."</span>&nbsp;</td>";
-
-    if (isset($iter{"email"}) && strlen($iter{"email"}) > 1) {
-        $foundBacklineUser = false;
-        foreach ($users->users as $backlineUser) {
-            if($backlineUser->email == $iter{"email"}) {
-                $foundBacklineUser = true;
+            $query = "SELECT * FROM users WHERE username != '' ";
+                if (!$form_inactive) $query .= "AND active = '1' ";
+            $query .= "ORDER BY username";
+            $res = sqlStatement($query);
+            for ($iter = 0;$row = sqlFetchArray($res);$iter++) {
+                $result4[$iter] = $row;
             }
-        }
-    }
+            foreach ($result4 as $iter) {
+                if ($iter{"authorized"}) {
+                    $iter{"authorized"} = xl('yes');
+                } else {
+                    $iter{"authorized"} = "";
+                }
+
+            print "<tr height=20  class='text' style='border-bottom: 1px dashed;'>
+                  <td class='text'><b><span>" . $iter{"username"} . "</span></b>" ."&nbsp;</td>
+              <td><span class='text'>" . attr($iter{"fname"}) . ' ' . attr($iter{"lname"}) ."</span>&nbsp;</td>";
+
+              if (isset($iter{"email"}) && strlen($iter{"email"}) > 1) {
+                  $foundBacklineUser = false;
+                  foreach ($users->users as $backlineUser) {
+                      if($backlineUser->email == $iter{"email"}) {
+                          $foundBacklineUser = true;
+                      }
+                  }
+              }
 
    print "<td><span class='text'>" . $iter{"email"} . "</span>&nbsp;<a href='backline_email_add.php?mode=update_email&id=" . $iter{"id"} . "&email=" . $iter{"email"} . "' class='iframe_medium'>[Edit]</a></td>";
 
