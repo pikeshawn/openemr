@@ -19,7 +19,8 @@ $patientDetails = $cc->getPatientDetails($pid);
 //If we don't have a providerID, we can't do backline things cause we need someone to send the message to
 if ($patientDetails['providerID']) {
     $userDetails = $cc->getUserDetails($patientDetails['providerID']);
-    $partnerAuthToken = $cc->getPartnerToken();
+    $partnerData = $cc->getPartnerToken();
+    $partnerAuthToken = $partnerData["auth_token"];
 
     $queryData = array(
         'user_type'=>2,

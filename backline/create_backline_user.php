@@ -24,7 +24,8 @@ $cc = new backlineCURL();
 
 if (isset($_GET['id'])) {
     $userDetails = $cc->getUserDetails($_GET['id']);
-    $partnerAuthToken = $cc->getPartnerToken();
+    $partnerData = $cc->getPartnerToken();
+    $partnerAuthToken = $partnerData["auth_token"];
 
    // $userToken = $cc->getUserToken($partnerAuthToken, $partnerOrgEmail);
 

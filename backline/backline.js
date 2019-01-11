@@ -47,8 +47,18 @@
         }
 
         jQuery.get(rootUrl + '/backline/backline_injector.php', function (data) {
-            if (!data.error_code) {
+        
+	console.log(JSON.stringify(data));
+
+
+    if (!data.error_code) {
                 _backlineData = data;
+
+		//_backlineSidebarButtonEl = false;
+		
+		console.log(_backlineSidebarButtonEl);
+
+		// debugger;
 
                 if (!_backlineSidebarButtonEl) {
                     injectBacklineSidebarButton();
@@ -101,7 +111,13 @@
         rootUrl = 'https://openemr.staging.drfirst.com';
         jQuery.get(rootUrl + '/backline/backline_injector.php?patient_id=' + _lastPatientPid, function (data) {
         //jQuery.get('https://openemr.staging.drfirst.com/backline/backline_injector.php?patient_id=1', function (data) {
-            console.log(JSON.stringify(data));
+            //console.log(JSON.stringify(data));
+            console.log(data);
+
+            //let url = data.recent_link.url;
+	    //let urlArray = url.split('?');          
+	    //let auth_token = urlArray[1].split('=');          
+
             _backlinePatientData = data;
             sendMessageLink.removeClass('loading');
 
@@ -325,6 +341,8 @@
             };
 
 
+	    console.log(window.left_nav.setPatient());
+
             /**
              * Remove the button we inserted when the active patient is cleared
              * @returns {*}
@@ -357,15 +375,14 @@
 
                 var location;
                 if (chatType === 'recent') {
-/*		           
-jQuery.get(_backlineData.recent_link.url, function(data){
-                               if (data.url[4] === ':') {
-                                   var domain = data.url.substring(4);
-                                   data.url = 'https' + domain;
-                               }
-                               location = data.url;
-                               finished = true;
-                           });*/
+                    //location = jQuery.get(_backlineData.recent_link.url, function(data){
+                    //    if (data.url[4] === ':') {
+                    //    var domain = data.url.substring(4);
+                    //        data.url = 'https' + domain;
+                    //    }
+                    //    return data.url;
+                        //finished = true;
+                    //});
                     location = 'https://webplus.demo.akariobl.com?auth_token=sRaX_HYyN_tfQQHee4ew#/recent';
 
                 } else if (chatType==='pcc') {

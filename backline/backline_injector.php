@@ -27,7 +27,10 @@ if (!empty($backlineUserId)) {
 
 //$f = fopen('backlineData.txt', 'w');
 
-    $partnerAuthToken = $cc->getPartnerToken();
+    $partnerData = $cc->getPartnerToken();
+    $partnerAuthToken = $partnerData["auth_token"];
+
+    //var_dump($partnerData);
 
 //echo "Partner Auth Token: -> ". $partnerAuthToken."\n";
 
@@ -42,10 +45,15 @@ if (!empty($backlineUserId)) {
 //echo "Org: -> ". $org."\n";
 
     //Get the user token from the partner token
-    $userToken = $cc->post('/partners/tokens/sudouser', 'auth_token='.$partnerAuthToken.'&email='.htmlspecialchars($userDetails['email'], ENT_QUOTES, 'UTF-8').'&system_id='.$systemId.'&org_id='.$org->id);
+//	echo "\n";
+//	var_dump($partnerData["user"]["orgs"][0]["id"]);
+//	echo "\n";
+//	echo 'auth_token='.$partnerAuthToken.'&email='.htmlspecialchars($userDetails['email'], ENT_QUOTES, 'UTF-8').'&system_id='.$systemId.'&org_id='.$partnerData["user"]["orgs"][0]["id"];
 
-//var_dump($userToken);
-
+    $userToken = $cc->post('/partners/tokens/sudouser', 'auth_token='.$partnerAuthToken.'&email='.htmlspecialchars($userDetails['email'], ENT_QUOTES, 'UTF-8').'&system_id='.$systemId.'&org_id='.$partnerData["user"]["orgs"][0]["id"]);
+//	echo "\n";
+//	var_dump($userToken);
+//	echo "\n";
 //echo "user token: -> ". $userToken . "\n";
 
 
@@ -65,8 +73,10 @@ if (!empty($backlineUserId)) {
             //Try and get the patient_details including the patient e-mail
             $patient_details = $cc->getPatientDetails($patientId);
 
+//echo '#######################patient details##############\n';
 //var_dump($patient_details);
 
+//echo '#######################patient details##############\n';
     //        var_dump($patient_details);
             if (!$patient_details) {
                 $userData->error_code = 'INVALID_PATIENT_ID';
