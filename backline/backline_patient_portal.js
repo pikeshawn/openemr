@@ -39,8 +39,6 @@
         jQuery.get(rootUrl + '/backline/patient_portal_chat.php', function (data) {
             _backlineData =  JSON.parse(data);
             
-            
-            
             if (!_backlineChatLinkEl) {
                 _backlineChatLinkEl = jQuery('<a href="" class="backline-patient-portal-chat-link" href="" onclick="return top.window.parent.left_nav.loadBacklineFrame(\'adm0\',\'RTop\',\'user\')" target="_blank"><img class="backline-chat-logo" src="../backline/chat_logo.png" /><h1>Chat with your Care Provider</h1><div><!--You have <span class="badge"></span> unread backline messages --><small>click here to start a backline chat session</small></div></a>');
                 _backlineChatLinkBadgeEl = _backlineChatLinkEl.find('.badge');

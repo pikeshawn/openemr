@@ -93,7 +93,8 @@
    * @param showLoading
    */
   function updateBacklinePatientButton(showLoading, _lastPatientPid, rootUrl) {
-    var sendMessageLink = _insertedTdSendMessageEl.find('#send_message');
+    if (_lastPatientPid) {
+var sendMessageLink = _insertedTdSendMessageEl.find('#send_message');
     var sendPCCLink = _insertedTdPCCMessageEl.find('#send_pcc');
 
     if (showLoading === true) {
@@ -107,7 +108,6 @@
     console.log(rootUrl);
     console.log(_lastPatientPid);
     rootUrl = 'https://openemr.staging.drfirst.com';
-    if (_lastPatientPid) {
       jQuery.get(rootUrl + '/backline/backline_injector.php?patient_id=' + _lastPatientPid, function (data) {
         //jQuery.get('https://openemr.staging.drfirst.com/backline/backline_injector.php?patient_id=1', function (data) {
         //console.log(JSON.stringify(data));
@@ -305,7 +305,9 @@
         var tdEl = jQuery(activeButtonEl).parent('td');
         var foundSendMessageEl = window.Title.document.getElementById('ccd_send_message');
         if (!_insertedTdSendMessageEl) {
-          var divContent = '<td style="vertical-align:text-bottom;position:relative;"> ' +
+//debugger;        
+
+  var divContent = '<td style="vertical-align:text-bottom;position:relative;"> ' +
             '<a class="css_button_small backline-chat-link-button" onclick="return top.window.parent.left_nav.loadBacklineFrame(\'adm0\',\'RTop\',\'user\')" style="margin:0px;vertical-align:top;" id="send_message"> ' +
             '<span class="badge send-message-badge"></span>' +
             '<span class="send-message-text">Patient Chat</span>' +
@@ -340,7 +342,7 @@
       };
 
 
-      console.log(window.left_nav.setPatient());
+      //console.log(window.left_nav.setPatient());
 
       /**
        * Remove the button we inserted when the active patient is cleared
@@ -372,15 +374,35 @@
 
         var location;
         if (chatType === 'recent') {
-          //location = jQuery.get(_backlineData.recent_link.url, function(data){
-          //    if (data.url[4] === ':') {
-          //    var domain = data.url.substring(4);
-          //        data.url = 'https' + domain;
-          //    }
-          //    return data.url;
-          //finished = true;
-          //});
-          location = 'https://webplus.demo.akariobl.com?auth_token=sRaX_HYyN_tfQQHee4ew#/recent';
+
+		$.ajaxSetup({async: false});
+
+	      location = $.get(_backlineData.recent_link.url).done(function(data) { 
+                  if (data.url[4] === ':') {
+                      var domain = data.url.substring(4);
+                      data.url = 'https' + domain;
+                  }
+                  return data.url;
+		});
+
+                var location = JSON.parse(JSON.stringify(location));
+                var location = JSON.parse(JSON.stringify(location.responseText));
+
+	
+	
+console.log(location);
+location = JSON.parse(location);
+console.log(location);
+	
+                  if (location.url[4] === ':') {
+                      var domain = location.url.substring(4);
+                      location = 'https' + domain;
+                  }
+                 
+
+		console.log(JSON.stringify(location));
+
+          //location = 'https://webplus.demo.akariobl.com?auth_token=sRaX_HYyN_tfQQHee4ew#/recent';
 
         } else if (chatType === 'pcc') {
 
@@ -434,6 +456,6 @@
 
 
   //Update the header count periodically
-  setInterval(updateBacklineHeader, 5000);
+ setInterval(updateBacklineHeader, 5000);
 
 })();
