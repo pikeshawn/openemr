@@ -190,7 +190,7 @@ class backlineCURL
 
         curl_close($process);
 
-            $jsonData->url = $url;
+            //$jsonData->url = $url;
 
 
         return $jsonData;

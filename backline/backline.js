@@ -23,7 +23,7 @@
   function injectBacklineStyleSheet(doc) {
     var cssId = 'backlineCSS';  // you could encode the css path itself to generate id..
     console.log(JSON.stringify(doc));
-    if (!doc.getElementById(cssId)) {
+    if (!doc.getElementById(cssId) && doc.head !== null) {
       var head = doc.getElementsByTagName('head')[0];
       var link = doc.createElement('link');
       link.id = cssId;
@@ -40,7 +40,9 @@
    * bar will be hidden
    */
   function updateBacklineHeader() {
-    if (!_backlineAdminSidebarButtonEl) {
+//	console.log(_backlineAdminSidebarButtonEl);  
+
+  if (!_backlineAdminSidebarButtonEl) {
       injectBacklineSidebarAdminButton();
     }
 
@@ -48,21 +50,30 @@
 
       console.log(JSON.stringify(data));
 
+//debugger;
+//	data = {"unread_count": 3,"recent_link":{"url":"https://adama.demo.akariobl.com/api/partners/users/discussions/recent?auth_token=R2QdBGtygFCqyP71-Le-"}};
+
 
       if (!data.error_code) {
         _backlineData = data;
 
         //_backlineSidebarButtonEl = false;
 
-        console.log(_backlineSidebarButtonEl);
+        console.log(JSON.stringify(_backlineSidebarButtonEl));
 
         // debugger;
 
-        if (!_backlineSidebarButtonEl) {
+        
+	if (!_backlineSidebarButtonEl) {
           injectBacklineSidebarButton();
         }
 
+
+
+        console.log(JSON.stringify(_backlineHeaderEl));
+
         if (!_backlineHeaderEl) {
+  //      if (_backlineHeaderEl) {
           _backlineHeaderEl = jQuery('<a  class="backline-top-header" href="" onclick="return top.window.parent.left_nav.loadBacklineFrame(\'adm0\',\'RTop\',\'user\')" target="_blank"><div>You have <span class="badge"></span> unread backline messages <small>(click this bar to read them)</small></div></a>');
           _backlineHeaderBadgeEl = _backlineHeaderEl.find('.badge');
           jQuery('html').prepend(_backlineHeaderEl);
@@ -71,7 +82,7 @@
         if (data.unread_count > 0) {
           _backlineHeaderBadgeEl.html(data.unread_count);
           _backlineHeaderEl.attr('href', data.recent_link.url);
-          _backlineHeaderEl.hide();
+          _backlineHeaderEl.show();
 
           if (_backlineSidebarBadgeEl) {
             _backlineSidebarButtonEl.addClass('has-messages');
@@ -174,14 +185,26 @@ var sendMessageLink = _insertedTdSendMessageEl.find('#send_message');
     var failed = false;
     if (window.left_nav && window.left_nav.document) {
 
+	console.log(JSON.stringify(window.left_nav.document));
+	console.log(JSON.stringify(window.left_nav.document.head));
+
+
       injectBacklineStyleSheet(window.left_nav.document);
 
       var liEl = jQuery(window.left_nav.document.getElementById('patimg')).parent();
       if (liEl.length > 0) {
         if (!_backlineSidebarButtonEl) {
-          _backlineSidebarButtonEl = jQuery(
-            '<li><a class="collapsed backline-sidebar-link" id="backlineLeftLink" onclick="return loadBacklineFrame(\'adm0\',\'RTop\',\'recent\')"><i class="fa fa-fw fa-send fa-2x"><span>&nbsp;Backline</span></span></a></li>'
-          );
+          _backlineSidebarButtonEl = jQuery('<li>' +
+     '<a class="collapsed backline-sidebar-link"' +
+        'id="backlineLeftLink" style="display: flex; justify-content: space-between; align-items: center"' +
+        'onclick="return loadBacklineFrame(\'adm0\',\'RTop\',\'recent\')">' +
+         '<div>'+
+             '<i class="fa fa-fw fa-send fa-2x"></i>' +
+             '<span style="margin-left: .20rem; font-size: 8pt; font-family: -apple-system,BlinkMacSystemFont,\'Segoe UI\',\'Roboto\',\'Oxygen\',\'Ubuntu\',\'Cantarell\',\'Fira Sans\',\'Droid Sans\',\'Helvetica Neue\',sans-serif;">Backline</span>' +
+         '</div>'+
+         '<div style="margin-right: 1.25rem;" class="badge"></div>' +
+     '</a>' +
+'</li>');
           _backlineSidebarBadgeEl = _backlineSidebarButtonEl.find('.badge');
           liEl.append(_backlineSidebarButtonEl);
         }
@@ -213,6 +236,9 @@ var sendMessageLink = _insertedTdSendMessageEl.find('#send_message');
   function injectBacklineSidebarAdminButton() {
     var failed = false;
     if (window.left_nav && window.left_nav.document) {
+
+	console.log(JSON.stringify(window.left_nav.document));
+	console.log(JSON.stringify(window.left_nav.document.head));
 
       injectBacklineStyleSheet(window.left_nav.document);
 
@@ -281,7 +307,11 @@ var sendMessageLink = _insertedTdSendMessageEl.find('#send_message');
    */
   function injectBacklinePatientButton() {
     if (window.left_nav && window.left_nav.clearactive && window.left_nav.setPatient) {
-      injectBacklineStyleSheet(window.Title.document);
+      
+console.log(JSON.stringify(window.Title.document));
+console.log(JSON.stringify(window.Title.document.head));
+
+	injectBacklineStyleSheet(window.Title.document);
 
       //We are going to hijack the setPatient and clearactive function calls.  We save the old versions
       //so we can call them after we inject our data
@@ -375,35 +405,37 @@ var sendMessageLink = _insertedTdSendMessageEl.find('#send_message');
         var location;
         if (chatType === 'recent') {
 
-		$.ajaxSetup({async: false});
+location = _backlineData.recent_link.url;
 
-	      location = $.get(_backlineData.recent_link.url).done(function(data) { 
-                  if (data.url[4] === ':') {
-                      var domain = data.url.substring(4);
-                      data.url = 'https' + domain;
-                  }
-                  return data.url;
+		//$.ajaxSetup({async: false});
+
+	    //  location = $.get(_backlineData.recent_link.url).done(function(data) { 
+              //    if (data.url[4] === ':') {
+                //      var domain = data.url.substring(4);
+                  //    data.url = 'https' + domain;
+                //  }
+              /*    return data.url;
 		});
 
                 var location = JSON.parse(JSON.stringify(location));
                 var location = JSON.parse(JSON.stringify(location.responseText));
-
+	
 	
 	
 console.log(location);
 location = JSON.parse(location);
 console.log(location);
-	
-                  if (location.url[4] === ':') {
-                      var domain = location.url.substring(4);
+*/	
+                  if (location[4] === ':') {
+                      var domain = location.substring(4);
                       location = 'https' + domain;
                   }
                  
 
+
 		console.log(JSON.stringify(location));
 
           //location = 'https://webplus.demo.akariobl.com?auth_token=sRaX_HYyN_tfQQHee4ew#/recent';
-
         } else if (chatType === 'pcc') {
 
           if (_backlinePatientData.pcc_chat.url[4] === ':') {
@@ -449,6 +481,9 @@ console.log(location);
       setTimeout(injectBacklinePatientButton, 1000);
     }
   }
+
+console.log(JSON.stringify(document));
+console.log(JSON.stringify(document.head));
 
   injectBacklineStyleSheet(document);
   updateBacklineHeader();
