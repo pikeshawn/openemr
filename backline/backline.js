@@ -451,7 +451,7 @@ console.log(location);
           location = _backlinePatientData.user_chat.url;
         }
         top.frames[frame].location = location;
-        console.log(location);
+        console.log('hello');
         // alert(location);
 
         return false;
